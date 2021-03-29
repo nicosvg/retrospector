@@ -18,6 +18,8 @@ defmodule RetrospectorWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
+
+    resources "/boards", BoardController
   end
 
   # Other scopes may use custom stacks.
