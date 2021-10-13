@@ -20,6 +20,7 @@ defmodule RetrospectorWeb.Router do
     live "/", PageLive, :index
 
     resources "/boards", BoardController
+    resources "/cards", CardController
   end
 
   # Other scopes may use custom stacks.

@@ -12,3 +12,12 @@
     border: 1px solid #0f6674;
     flex: 1;
 }
+
+.board-title {
+    padding: 8px;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+}

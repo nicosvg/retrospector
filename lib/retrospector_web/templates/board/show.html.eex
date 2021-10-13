@@ -1,22 +1,14 @@
-<h1>Show Board</h1>
+<h1> <%= @board.name %></h1>
 
-<ul>
-
-    <li>
-        <strong>Name:</strong>
-        <%= @board.name %>
-    </li>
-
-</ul>
-
-<h2>Columns</h2>
 <div class="board-columns">
- <%= for c <- @board.columns do %>
+    <%= for c <- @board.columns do %>
     <div class="board-column">
-    <%= c.title %>
+        <h3 class="board-title"><%= c.title %></h3>
+        <div class="centered">
+            <%= button("add", to: Routes.card_path(@conn, :new ), method: "get") %>
+        </div>
     </div>
- <% end %>
+    <% end %>
 </div>
 
-<span><%= link "Edit", to: Routes.board_path(@conn, :edit, @board) %></span>
 <span><%= link "Back", to: Routes.board_path(@conn, :index) %></span>

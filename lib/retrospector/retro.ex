@@ -8,6 +8,7 @@ defmodule Retrospector.Retro do
 
   alias Retrospector.Retro.Board
   alias Retrospector.Retro.Column
+  alias Retrospector.Retro.Card
 
   @doc """
   Returns the list of boards.
@@ -119,5 +120,9 @@ defmodule Retrospector.Retro do
   """
   def change_board(%Board{} = board, attrs \\ %{}) do
     Board.changeset(board, attrs)
+  end
+
+  def change_card(%Card{} = card, attrs \\ %{}) do
+    Card.changeset(card, attrs)
   end
 end
