@@ -2,12 +2,21 @@
 
 <ul>
 
-  <li>
-    <strong>Name:</strong>
-    <%= @board.name %>
-  </li>
+    <li>
+        <strong>Name:</strong>
+        <%= @board.name %>
+    </li>
 
 </ul>
+
+<h2>Columns</h2>
+<div class="board-columns">
+ <%= for c <- @board.columns do %>
+    <div class="board-column">
+    <%= c.title %>
+    </div>
+ <% end %>
+</div>
 
 <span><%= link "Edit", to: Routes.board_path(@conn, :edit, @board) %></span>
 <span><%= link "Back", to: Routes.board_path(@conn, :index) %></span>

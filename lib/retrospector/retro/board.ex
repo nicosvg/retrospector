@@ -2,10 +2,13 @@ defmodule Retrospector.Retro.Board do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @primary_key {:id, Ecto.UUID, autogenerate: true}
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
 
   schema "boards" do
     field :name, :string
+
+    has_many :columns, Retrospector.Retro.Column
 
     timestamps()
   end
@@ -16,4 +19,5 @@ defmodule Retrospector.Retro.Board do
     |> cast(attrs, [:name])
     |> validate_required([:name])
   end
+
 end

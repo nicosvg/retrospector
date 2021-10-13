@@ -7,6 +7,7 @@ defmodule Retrospector.Retro do
   alias Retrospector.Repo
 
   alias Retrospector.Retro.Board
+  alias Retrospector.Retro.Column
 
   @doc """
   Returns the list of boards.
@@ -35,7 +36,11 @@ defmodule Retrospector.Retro do
       ** (Ecto.NoResultsError)
 
   """
-  def get_board!(id), do: Repo.get!(Board, id)
+  def get_board!(id) do
+    Repo.one from board in Board,
+             where: board.id == ^id,
+             preload: [:columns]
+  end
 
   @doc """
   Creates a board.
@@ -52,8 +57,22 @@ defmodule Retrospector.Retro do
   def create_board(attrs \\ %{}) do
     %Board{}
     |> Board.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert
+    |> IO.inspect
+    |> create_default_columns
   end
+
+  @doc """
+  Creates default columns for a board.
+  """
+  def create_default_columns({:ok, board}) do
+    first = %Column{title: "Went well", position: 0, board_id: board.id}
+    second = %Column{title: "To improve", position: 1, board_id: board.id}
+    third = %Column{title: "Actions", position: 2, board_id: board.id}
+    Enum.map([first, second, third], &Repo.insert/1)
+    {:ok, board}
+  end
+
 
   @doc """
   Updates a board.

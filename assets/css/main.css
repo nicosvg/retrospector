@@ -1,0 +1,13 @@
+
+.board-columns {
+    border: 1px solid rebeccapurple;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-evenly;
+}
+
+.board-column {
+    border: 1px solid #0f6674;
+    flex: 1;
+}
