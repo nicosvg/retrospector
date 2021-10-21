@@ -6,7 +6,6 @@ defmodule Retrospector.Retro.Card do
     field :board_id, Ecto.UUID
     field :column_id, Ecto.UUID
     field :content, :string
-    field :user_id, Ecto.UUID
 
     timestamps()
   end
@@ -14,7 +13,7 @@ defmodule Retrospector.Retro.Card do
   @doc false
   def changeset(card, attrs) do
     card
-    |> cast(attrs, [:content, :board_id, :column_id, :user_id])
-    |> validate_required([:content, :board_id, :column_id, :user_id])
+    |> cast(attrs, [:content, :board_id, :column_id])
+    |> validate_required([:board_id, :column_id])
   end
 end

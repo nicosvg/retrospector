@@ -5,9 +5,13 @@
     </div>
   <% end %>
 
+    ID du board : <%= @board_id %>
+
   <%= label f, :content %>
   <%= text_input f, :content %>
   <%= error_tag f, :content  %>
+  <%= hidden_input f, :board_id, value: @board_id %>
+  <%= hidden_input f, :column_id, value: @column_id %>
 
   <div>
     <%= submit "Save" %>

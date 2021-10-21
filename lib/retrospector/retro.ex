@@ -125,4 +125,11 @@ defmodule Retrospector.Retro do
   def change_card(%Card{} = card, attrs \\ %{}) do
     Card.changeset(card, attrs)
   end
+
+  def create_card(attrs \\ %{}) do
+    %Card{}
+    |> Card.changeset(attrs)
+    |> Repo.insert
+    |> IO.inspect
+  end
 end
