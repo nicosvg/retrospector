@@ -2,5 +2,5 @@
   <h1>Retrospector</h1>
   <p>Quick and easy retrospectives for agile teams</p>
 
-
+  <span><%= button "Create a board", to: Routes.board_path(@conn, :new), method: :get %></span>
 </section>

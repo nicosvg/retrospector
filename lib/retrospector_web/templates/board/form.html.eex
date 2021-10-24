@@ -9,11 +9,6 @@
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
 
-<div class="">
-    <h2>Columns</h2>
-    <%=  %>
-</div>
-
   <div>
     <%= submit "Save" %>
   </div>

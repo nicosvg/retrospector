@@ -18,7 +18,6 @@ defmodule RetrospectorWeb.CardController do
     case Retro.create_card(card_params) do
       {:ok, _card} ->
         conn
-        |> put_flash(:info, "Card created successfully.")
         |> redirect(to: Routes.board_path(conn, :show, card_params["board_id"]))
 
       {:error, %Ecto.Changeset{} = changeset} ->

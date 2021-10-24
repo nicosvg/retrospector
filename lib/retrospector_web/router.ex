@@ -17,7 +17,9 @@ defmodule RetrospectorWeb.Router do
   scope "/", RetrospectorWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    # live "/", PageLive, :index
+    #    resources "/", PageLive, :index
+    get "/", HomeController, :index
 
     resources "/boards", BoardController do
       resources "/cards", CardController

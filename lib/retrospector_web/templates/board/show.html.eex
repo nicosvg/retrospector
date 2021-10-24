@@ -10,10 +10,8 @@
             </div>
     <% end %>
         <div class="centered">
-            <%= link "add", to: Routes.board_card_path(@conn, :new, @board.id, column_id: c.id) %>
+            <%= button("add", to: Routes.board_card_path(@conn, :new, @board.id, column_id: c.id),method: :get)%>
         </div>
     </div>
     <% end %>
 </div>
-
-<span><%= link "Back", to: Routes.board_path(@conn, :index) %></span>

@@ -1,16 +1,18 @@
 
 .board-columns {
-    border: 1px solid rebeccapurple;
     display: flex;
     flex-direction: row;
     align-items: stretch;
     justify-content: space-evenly;
-    background-color: aliceblue;
+    width: 100%;
 }
 
 .board-column {
-    border: 1px solid #0f6674;
     flex: 1;
+    margin: 8px;
+    border-radius: 4px;
+    background-color: aliceblue;
+    width: 50em;
 }
 
 .board-title {
