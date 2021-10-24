@@ -16,13 +16,14 @@ defmodule RetrospectorWeb.CardController do
   def create(conn, %{"card" => card_params}) do
     IO.puts("Creating card")
     case Retro.create_card(card_params) do
-      {:ok, card} ->
+      {:ok, _card} ->
         conn
         |> put_flash(:info, "Card created successfully.")
-        |> redirect(to: Routes.board_path(conn, :index))
+        |> redirect(to: Routes.board_path(conn, :show, card_params["board_id"]))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset, board_id: "1")
+
     end
   end
 

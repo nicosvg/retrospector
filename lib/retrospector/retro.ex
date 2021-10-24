@@ -40,7 +40,7 @@ defmodule Retrospector.Retro do
   def get_board!(id) do
     Repo.one from board in Board,
              where: board.id == ^id,
-             preload: [:columns]
+             preload: [:columns, columns: :cards]
   end
 
   @doc """

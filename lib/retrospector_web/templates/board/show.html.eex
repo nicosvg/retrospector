@@ -4,6 +4,11 @@
     <%= for c <- @board.columns do %>
     <div class="board-column">
         <h3 class="board-title"><%= c.title %></h3>
+            <%= for card <- c.cards do %>
+            <div class="card">
+            <%= card.content %>
+            </div>
+    <% end %>
         <div class="centered">
             <%= link "add", to: Routes.board_card_path(@conn, :new, @board.id, column_id: c.id) %>
         </div>

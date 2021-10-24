@@ -9,7 +9,7 @@ defmodule Retrospector.Retro.Column do
     field :position, :integer
     field :title, :string
 
-#    belongs_to :retro, Retrospector.Retro.Board
+    has_many :cards, Retrospector.Retro.Card
 
     timestamps()
   end
