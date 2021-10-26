@@ -2,16 +2,14 @@
 
 <div class="board-columns">
     <%= for c <- @board.columns do %>
-    <div class="board-column">
-        <h3 class="board-title"><%= c.title %></h3>
-            <%= for card <- c.cards do %>
-            <div class="card">
-            <%= card.content %>
-            </div>
-    <% end %>
-        <div class="centered">
-            <%= button("add", to: Routes.board_card_path(@conn, :new, @board.id, column_id: c.id),method: :get)%>
+        <div class="board-column">
+            <h3 class="board-title"><%= c.title %></h3>
+                <div class="centered">
+                    <%= link("add", to: Routes.board_card_path(@conn, :new, @board.id, column_id: c.id),method: :get, class: "button")%>
+                </div>
+                <div>
+                    <%= live_render(@conn, RetrospectorWeb.BoardCardsLive, session: %{"column_id" => c.id}) %>
+                </div>
         </div>
-    </div>
     <% end %>
 </div>

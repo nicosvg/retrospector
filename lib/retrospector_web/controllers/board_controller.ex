@@ -3,10 +3,12 @@ defmodule RetrospectorWeb.BoardController do
 
   alias Retrospector.Retro
   alias Retrospector.Retro.Board
+  alias Phoenix.LiveView
 
   def index(conn, _params) do
-    boards = Retro.list_boards()
-    render(conn, "index.html", boards: boards)
+    # boards = Retro.list_boards()
+    # render(conn, "index.html", boards: boards)
+    LiveView.Controller.live_render(conn, RetrospectorWeb.BoardCardsView, session: %{})
   end
 
   def new(conn, _params) do

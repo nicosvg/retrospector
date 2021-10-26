@@ -21,6 +21,8 @@ defmodule RetrospectorWeb.Router do
     #    resources "/", PageLive, :index
     get "/", HomeController, :index
 
+    live "/board", BoardLive
+
     resources "/boards", BoardController do
       resources "/cards", CardController
     end

@@ -33,14 +33,26 @@ defmodule Retrospector.Retro do
       iex> get_board!(123)
       %Board{}
 
+
+
       iex> get_board!(456)
       ** (Ecto.NoResultsError)
 
   """
   def get_board!(id) do
-    Repo.one from board in Board,
-             where: board.id == ^id,
-             preload: [:columns, columns: :cards]
+    Repo.one(
+      from board in Board,
+        where: board.id == ^id,
+        preload: [:columns, columns: :cards]
+    )
+  end
+
+  def get_column(id) do
+    Repo.one(
+      from column in Column,
+        where: column.id == ^id,
+        preload: [:cards]
+    )
   end
 
   @doc """
@@ -58,8 +70,8 @@ defmodule Retrospector.Retro do
   def create_board(attrs \\ %{}) do
     %Board{}
     |> Board.changeset(attrs)
-    |> Repo.insert
-    |> IO.inspect
+    |> Repo.insert()
+    |> IO.inspect()
     |> create_default_columns
   end
 
@@ -73,7 +85,6 @@ defmodule Retrospector.Retro do
     Enum.map([first, second, third], &Repo.insert/1)
     {:ok, board}
   end
-
 
   @doc """
   Updates a board.
@@ -129,7 +140,19 @@ defmodule Retrospector.Retro do
   def create_card(attrs \\ %{}) do
     %Card{}
     |> Card.changeset(attrs)
-    |> Repo.insert
-    |> IO.inspect
+    |> Repo.insert()
+    |> IO.inspect()
+    |> broadcast(:card_created)
+  end
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(Retrospector.PubSub, "cards")
+  end
+
+  defp broadcast({:error, _reason} = error, _event), do: error
+
+  defp broadcast({:ok, card}, event) do
+    Phoenix.PubSub.broadcast(Retrospector.PubSub, "cards", {event, card})
+    {:ok, card}
   end
 end
