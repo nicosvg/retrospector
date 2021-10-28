@@ -1,0 +1,18 @@
+<div>
+  <.form let={f} for={@changeset} phx-submit="save" class="card-form">     
+    <%= textarea f, :content %>
+    <%= error_tag f, :content  %>
+    <%= hidden_input f, :board_id, value: @board_id %>
+    <%= hidden_input f, :column_id, value: @column_id %>
+    <div class="centered">
+      <%= submit "Add" %>
+    </div>
+  </.form>
+  <div>
+    <%= for card <- @cards do %>
+    <div class="card">
+      <%= card.content %>
+    </div>
+    <% end %>
+  </div>
+</div>

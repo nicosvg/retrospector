@@ -141,7 +141,6 @@ defmodule Retrospector.Retro do
     %Card{}
     |> Card.changeset(attrs)
     |> Repo.insert()
-    |> IO.inspect()
     |> broadcast(:card_created)
   end
 
