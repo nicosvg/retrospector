@@ -4,8 +4,9 @@ defmodule Retrospector.Retro do
   """
 
   import Ecto.Query, warn: false
-  alias Retrospector.Repo
+  alias Phoenix.PubSub
 
+  alias Retrospector.Repo
   alias Retrospector.Retro.Board
   alias Retrospector.Retro.Column
   alias Retrospector.Retro.Card
@@ -104,6 +105,25 @@ defmodule Retrospector.Retro do
     |> Repo.update()
   end
 
+  def start_timer(id) do
+    seconds = 10
+    date = DateTime.now!("Etc/UTC")
+    reveal_date = date |> DateTime.add(seconds, :second, Calendar.UTCOnlyTimeZoneDatabase)
+    board = Repo.one(
+      from board in Board,
+        where: board.id == ^id
+    )
+    board
+    |> Board.changeset(%{reveal_date: reveal_date})
+    |> Repo.update()
+
+    :timer.apply_after(seconds * 1000, Retrospector.Retro, :reveal, [id])
+  end
+
+  def reveal(id) do
+    PubSub.broadcast(Retrospector.PubSub, "reveal:" <> id, :reveal)
+  end
+
   @doc """
   Deletes a board.
 
@@ -145,13 +165,13 @@ defmodule Retrospector.Retro do
   end
 
   def subscribe do
-    Phoenix.PubSub.subscribe(Retrospector.PubSub, "cards")
+    PubSub.subscribe(Retrospector.PubSub, "cards")
   end
 
   defp broadcast({:error, _reason} = error, _event), do: error
 
   defp broadcast({:ok, card}, event) do
-    Phoenix.PubSub.broadcast(Retrospector.PubSub, "cards", {event, card})
+    PubSub.broadcast(Retrospector.PubSub, "cards", {event, card})
     {:ok, card}
   end
 end

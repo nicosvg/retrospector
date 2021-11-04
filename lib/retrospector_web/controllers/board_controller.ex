@@ -61,4 +61,13 @@ defmodule RetrospectorWeb.BoardController do
     |> put_flash(:info, "Board deleted successfully.")
     |> redirect(to: Routes.board_path(conn, :index))
   end
+
+
+  def start_timer(conn, %{"id" => id}) do
+    IO.puts("Start timer ")
+    IO.inspect(id, label: "board id")
+    Retro.start_timer(id)
+    board = Retro.get_board!(id)
+    render(conn, "show.html", board: board)
+  end
 end

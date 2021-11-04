@@ -18,3 +18,8 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+
+# TODO
+
+- [ ] Ajouter un événement pub/sub "reveal" qui indiquera quand le tableau doit être affiché en entier

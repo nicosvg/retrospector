@@ -1,11 +1,14 @@
 <h1> <%= @board.name %></h1>
+<div>Reveal time: <%= @board.reveal_date %></div>
+<div>Current time: <%= DateTime.now!("Etc/UTC") %></div>
+<%= button("Start timer", to: Routes.board_path(@conn, :start_timer, @board.id) ) %>
 
 <div class="board-columns">
     <%= for c <- @board.columns do %>
         <div class="board-column">
             <h3 class="board-title"><%= c.title %></h3>
                 <div>
-                    <%= live_render(@conn, RetrospectorWeb.BoardCardsLive, session: %{"column_id" => c.id}) %>
+                    <%= live_render(@conn, RetrospectorWeb.BoardCardsLive, session: %{"column_id" => c.id, "reveal_date" => @board.reveal_date}) %>
                 </div>
         </div>
     <% end %>

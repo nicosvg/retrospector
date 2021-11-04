@@ -7,6 +7,7 @@ defmodule Retrospector.Retro.Board do
 
   schema "boards" do
     field :name, :string
+    field :reveal_date, :utc_datetime
 
     has_many :columns, Retrospector.Retro.Column
 
@@ -16,7 +17,7 @@ defmodule Retrospector.Retro.Board do
   @doc false
   def changeset(board, attrs) do
     board
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :reveal_date])
     |> validate_required([:name])
   end
 
