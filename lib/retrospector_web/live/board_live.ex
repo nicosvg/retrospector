@@ -19,7 +19,7 @@ defmodule RetrospectorWeb.BoardCardsLive do
        cards: column.cards,
        column_id: column.id,
        board_id: column.board_id,
-       revealed: DateTime.compare(session["reveal_date"], DateTime.now!("Etc/UTC")) == :lt
+       revealed: session["reveal_date"] == nil || DateTime.compare(session["reveal_date"], DateTime.now!("Etc/UTC")) == :lt
      )}
   end
 
