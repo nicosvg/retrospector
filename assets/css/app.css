@@ -1,5 +1,5 @@
 @import "./phoenix.css";
-@import "../node_modules/nprogress/nprogress.css";
+@import "./nprogress.css";
 @import "./main.css";
 /* This file is for your main application css. */
 /* LiveView specific classes for your customizations */

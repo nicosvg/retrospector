@@ -1,9 +1,0 @@
-{
-    "scripts": {
-        "deploy": "cd .. && mix assets.deploy && rm -f _build/esbuild"
-    },
-    "dependencies": {
-        "nprogress": "^0.2.0",
-        "phoenix_live_view": "^0.17.5"
-    }
-}
