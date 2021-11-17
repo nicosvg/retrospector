@@ -11,7 +11,7 @@ RUN mix local.hex --force && \
     mix local.rebar --force
 
 # set build ENV
-ARG MIX_ENV
+ARG MIX_ENV="prod"
 ENV MIX_ENV="${MIX_ENV}"
 
 # install mix dependencies
