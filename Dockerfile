@@ -52,7 +52,7 @@ RUN mix release
 FROM alpine:3.12.1 AS app
 RUN apk add --no-cache libstdc++ openssl ncurses-libs
 
-ARG MIX_ENV
+ARG MIX_ENV="prod"
 ENV USER="elixir"
 
 WORKDIR "/home/${USER}/app"
