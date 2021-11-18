@@ -1,36 +1,31 @@
-
 version: '3.5'
 
 services:
   postgres:
-    container_name: postgres_container
+    container_name: microretro_pg_container
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       PGDATA: /data/postgres
-      POSTGRES_DB: bookadesk
+      POSTGRES_DB: microretro
     volumes:
-      - /data/postgres/retro:/data/postgres
+      - /tmp/postgres/retro:/data/postgres
     networks:
-      - postgres
+      - microretro
     restart: unless-stopped
 
-  retro:
-    container_name: retrospector
-    image: retrospector:latest
+  micro-retro:
+    container_name: microretro
+    image: noki/micro-retro:latest
     ports:
-      - "8000:8000"
+      - "4000:4000"
     depends_on:
       - "postgres"
     networks:
-      - postgres
+      - microretro
     restart: unless-stopped
 
 networks:
-  postgres:
+  microretro:
     driver: bridge
-
-volumes:
-  postgres:
-  retro:

@@ -20,7 +20,7 @@ RUN mix deps.get --only $MIX_ENV
 RUN mkdir config
 
 # set database url
-ENV DATABASE_URL=ecto://postgres:postgres@localhost/retropector_dev
+ENV DATABASE_URL=ecto://postgres:postgres@microretro/microretro
 ENV SECRET_KEY_BASE=2mHGJpDWmqFPzNqLDujGv2oQ2HZrnunV58bpYuqjpD42K7E4wOiil/HUOhvTheim
 
 # copy compile-time config files before we compile dependencies
