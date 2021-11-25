@@ -36,3 +36,8 @@ jobs:
         run: |
           docker build --build-arg current_version="${{ github.event.release.tag_name }}" -t noki/micro-retro:latest .
           docker push noki/micro-retro:latest
+
+      - name: Re-deploy
+        id: deploy
+        run: |
+          - curl -H "X-Webhook-Token: ${{ secrets.WEBHOOK_SECRET }}" http://51.38.37.160:9000/hooks/deploy-microretro
