@@ -41,6 +41,7 @@ if config_env() == :prod do
            ip: {0, 0, 0, 0, 0, 0, 0, 0},
            port: String.to_integer(System.fetch_env!("PORT") || "4000")
          ],
+         check_origin: [System.fetch_env!("ORIGIN") || "localhost"],
          secret_key_base: secret_key_base
 
   # ## Using releases
