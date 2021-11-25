@@ -106,7 +106,7 @@ defmodule Retrospector.Retro do
   end
 
   def start_timer(id) do
-    seconds = 10
+    seconds = 300
     date = DateTime.now!("Etc/UTC")
     reveal_date = date |> DateTime.add(seconds, :second, Calendar.UTCOnlyTimeZoneDatabase)
     board = Repo.one(
