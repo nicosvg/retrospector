@@ -40,4 +40,4 @@ jobs:
       - name: Re-deploy
         id: deploy
         run: |
-          - curl -H "X-Webhook-Token: ${{ secrets.WEBHOOK_SECRET }}" http://51.38.37.160:9000/hooks/deploy-microretro
+          curl -H "X-Webhook-Token: ${{ secrets.WEBHOOK_SECRET }}" http://51.38.37.160:9000/hooks/deploy-microretro
