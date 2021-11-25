@@ -5,19 +5,28 @@ services:
     container_name: microretro_pg_container
     image: postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       PGDATA: /data/postgres
       POSTGRES_DB: microretro
     volumes:
-      - /tmp/postgres/retro:/data/postgres
+      - /tmp/postgres/microretro:/data/postgres
     networks:
       - microretro
     restart: unless-stopped
 
   micro-retro:
     container_name: microretro
-    image: noki/micro-retro:latest
+    image: microretro:latest
+    environment:
+      - DATABASE_URL=ecto://postgres:postgres@postgres:5432/microretro
+      - SECRET_KEY_BASE=eeK0ewCYfXg6Tt2/djbWaoSfZn0f9WUaLUgG9DDaenPxVQbCM+vDFTQQQOl+MPPu
+      - PORT=4000
+    entrypoint: [sh, -c]
+    command:
+      - |
+        bin/retrospector eval "Retrospector.Release.migrate"
+        bin/retrospector start
     ports:
       - "4000:4000"
     depends_on:
@@ -29,3 +38,7 @@ services:
 networks:
   microretro:
     driver: bridge
+
+volumes:
+  postgres:
+  microretro:
