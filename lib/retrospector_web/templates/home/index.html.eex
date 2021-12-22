@@ -1,6 +1,11 @@
-<section class="phx-hero">
-  <h1>Retrospector</h1>
-  <p>Quick and easy retrospectives for agile teams</p>
+<div class="flex-column items-center text-center grow h-full justify-center">
+  <h1 class="text-6xl font-bold leading-normal text-purple-500 mt-48 mb-8">
+  <span class="bg-yellow-500 text-gray-900 rounded-l-lg pl-2 py-2 pr-1">micro</span>
+  Retro
+  </h1>
+  <p class="text-xl">Quick and easy retrospectives for agile teams</p>
 
-  <span><%= button "Create a board", to: Routes.board_path(@conn, :new), method: :get %></span>
-</section>
+ <%= button "Create a board", to: Routes.board_path(@conn, :new), method: :get,
+  class: "h-12 px-8 font-semibold rounded-md text-gray-800 bg-purple-200
+  hover:bg-yellow-700 hover:text-gray-300 mt-16" %>
+</div>
