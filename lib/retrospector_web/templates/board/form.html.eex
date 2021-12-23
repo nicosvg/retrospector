@@ -6,10 +6,10 @@
   <% end %>
 
   <%= label f, :name %>
-  <%= text_input f, :name %>
+  <%= text_input f, :name, class: "rounded shadow text-gray-700" %>
   <%= error_tag f, :name %>
 
-  <div>
-    <%= submit "Save" %>
+  <div class="mt-16">
+    <%= submit "Save", class: "primary-button" %>
   </div>
 <% end %>

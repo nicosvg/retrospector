@@ -7,3 +7,16 @@
 html {
   @apply bg-gray-900 text-gray-300;
 }
+
+label {
+  @apply mx-2 text-lg;
+}
+
+input {
+  @apply rounded bg-red-500 appearance-none shadow;
+}
+
+.primary-button {
+  @apply h-12 px-8 font-semibold rounded-md text-gray-800 bg-purple-200
+  hover:bg-yellow-700 hover:text-gray-300 m-2;
+}
