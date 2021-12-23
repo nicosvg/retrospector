@@ -1,7 +1,7 @@
-FROM hexpm/elixir:1.11.2-erlang-23.1.2-alpine-3.12.1 as build
+FROM hexpm/elixir:1.11.2-erlang-22.3.4.24-ubuntu-focal-20210325 as build
 
 # install build dependencies
-RUN apk add --no-cache build-base git python3 curl
+RUN apt-get install -y git python3 curl
 
 # prepare build dir
 WORKDIR /app
@@ -30,6 +30,9 @@ COPY config config
 RUN mix deps.compile
 
 COPY priv priv
+
+# Install Tailwind
+RUN mix tailwind.install
 
 # note: if your project uses a tool like https://purgecss.com/,
 # which customizes asset compilation based on what it finds in
