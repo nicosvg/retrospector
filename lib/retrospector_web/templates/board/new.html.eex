@@ -1,5 +1,6 @@
-<h1>New Board</h1>
+<div class="flex-column text-center grow justify-evenly">
+<h1 class="text-4xl mt-10 mb-6 bold">New Board</h1>
 
 <%= render "form.html", Map.put(assigns, :action, Routes.board_path(@conn, :create)) %>
 
-<span><%= link "Back", to: Routes.board_path(@conn, :index) %></span>
+</div>
