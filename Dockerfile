@@ -1,7 +1,7 @@
-FROM hexpm/elixir:1.11.2-erlang-22.3.4.24-ubuntu-focal-20210325 as build
+FROM hexpm/elixir:1.11.2-erlang-23.1.2-alpine-3.12.1 as build
 
 # install build dependencies
-RUN apt-get install -y git python3 curl
+RUN apk add --no-cache build-base git python3 curl
 
 # prepare build dir
 WORKDIR /app
@@ -39,6 +39,10 @@ RUN mix tailwind.install
 # your Elixir templates, you will need to move the asset compilation
 # step down so that `lib` is available.
 COPY assets assets
+
+RUN apk add gcompat
+RUN mkdir /lib64 && ln -s /lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
+
 RUN mix assets.deploy
 
 # compile and build the release
