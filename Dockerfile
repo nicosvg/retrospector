@@ -43,10 +43,10 @@ COPY assets assets
 RUN apk add gcompat
 RUN mkdir /lib64 && ln -s /lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
 
+COPY lib lib
 RUN mix assets.deploy
 
 # compile and build the release
-COPY lib lib
 RUN mix compile
 # changes to config/runtime.exs don't require recompiling the code
 COPY config/prod.exs config/
