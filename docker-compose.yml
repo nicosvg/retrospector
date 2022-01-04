@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 
 services:
   postgres:
@@ -17,7 +17,7 @@ services:
 
   micro-retro:
     container_name: microretro
-    image: microretro:latest
+    image: noki/micro-retro:latest
     environment:
       - DATABASE_URL=ecto://postgres:postgres@postgres:5432/microretro
       - SECRET_KEY_BASE=eeK0ewCYfXg6Tt2/djbWaoSfZn0f9WUaLUgG9DDaenPxVQbCM+vDFTQQQOl+MPPu
