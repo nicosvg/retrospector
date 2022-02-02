@@ -7,6 +7,5 @@ defmodule Retrospector.Repo.Migrations.CreateBoards do
       add :name, :string
       timestamps()
     end
-
   end
 end

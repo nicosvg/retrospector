@@ -109,13 +109,18 @@ defmodule Retrospector.Retro do
     seconds = 300
     date = DateTime.now!("Etc/UTC")
     reveal_date = date |> DateTime.add(seconds, :second, Calendar.UTCOnlyTimeZoneDatabase)
-    board = Repo.one(
-      from board in Board,
-        where: board.id == ^id
-    )
+
+    board =
+      Repo.one(
+        from board in Board,
+          where: board.id == ^id
+      )
+
     board
     |> Board.changeset(%{reveal_date: reveal_date})
     |> Repo.update()
+
+    PubSub.broadcast(Retrospector.PubSub, "start:" <> id, :start)
 
     :timer.apply_after(seconds * 1000, Retrospector.Retro, :reveal, [id])
   end

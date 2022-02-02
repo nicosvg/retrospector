@@ -62,11 +62,11 @@ defmodule RetrospectorWeb.BoardController do
     |> redirect(to: Routes.board_path(conn, :index))
   end
 
-
   def start_timer(conn, %{"id" => id}) do
     IO.puts("Start timer ")
     IO.inspect(id, label: "board id")
     Retro.start_timer(id)
+
     conn
     |> redirect(to: Routes.board_path(conn, :show, id))
   end

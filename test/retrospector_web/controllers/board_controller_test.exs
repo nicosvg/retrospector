@@ -75,6 +75,7 @@ defmodule RetrospectorWeb.BoardControllerTest do
     test "deletes chosen board", %{conn: conn, board: board} do
       conn = delete(conn, Routes.board_path(conn, :delete, board))
       assert redirected_to(conn) == Routes.board_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.board_path(conn, :show, board))
       end

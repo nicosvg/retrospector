@@ -10,6 +10,5 @@ defmodule Retrospector.Repo.Migrations.CreateColumns do
 
       timestamps()
     end
-
   end
 end

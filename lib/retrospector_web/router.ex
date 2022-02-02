@@ -26,6 +26,7 @@ defmodule RetrospectorWeb.Router do
     resources "/boards", BoardController do
       resources "/cards", CardController
     end
+
     post("/boards/:id/start_timer", BoardController, :start_timer)
   end
 

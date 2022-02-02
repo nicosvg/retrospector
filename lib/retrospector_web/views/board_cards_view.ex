@@ -15,5 +15,4 @@ defmodule RetrospectorWeb.BoardCardsView do
   def mount(_session, socket) do
     {:ok, assign(socket, cards: [])}
   end
-
 end

@@ -20,3 +20,11 @@ input {
   @apply h-12 px-8 font-semibold rounded-md text-gray-800 bg-purple-200
   hover:bg-yellow-700 hover:text-gray-300 m-2;
 }
+
+.phx-connected {
+  width: 100%;
+}
+
+.phx-disconnected {
+  width: 100%;
+}

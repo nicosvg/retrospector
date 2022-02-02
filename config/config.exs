@@ -5,11 +5,11 @@
 # is restricted to this project.
 
 # General application configuration
-#use Mix.Config
+# use Mix.Config
 import Config
 
 config :retrospector,
-       ecto_repos: [Retrospector.Repo]
+  ecto_repos: [Retrospector.Repo]
 
 # Configures the endpoint
 config :retrospector,
@@ -39,14 +39,14 @@ config :phoenix, :json_library, Jason
 
 # Configure esbuild (the version is required)
 config :esbuild,
-       version: "0.12.18",
-       default: [
-         args: ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/assets),
-         cd: Path.expand("../assets", __DIR__),
-         env: %{
-           "NODE_PATH" => Path.expand("../deps", __DIR__)
-         }
-       ]
+  version: "0.12.18",
+  default: [
+    args: ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/assets),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{
+      "NODE_PATH" => Path.expand("../deps", __DIR__)
+    }
+  ]
 
 # Configure Tailwind
 config :tailwind,
@@ -59,8 +59,8 @@ config :tailwind,
     ),
     cd: Path.expand("../assets", __DIR__)
   ]
-  
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-#import_config "#{Mix.env()}.exs"
+# import_config "#{Mix.env()}.exs"
 import_config "#{config_env()}.exs"

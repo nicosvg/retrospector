@@ -20,5 +20,4 @@ defmodule Retrospector.Retro.Board do
     |> cast(attrs, [:name, :reveal_date])
     |> validate_required([:name])
   end
-
 end

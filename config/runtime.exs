@@ -15,10 +15,10 @@ if config_env() == :prod do
       """
 
   config :retrospector, Retrospector.Repo,
-         # ssl: true,
-         # socket_options: [:inet6],
-         url: database_url,
-         pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
+    # ssl: true,
+    # socket_options: [:inet6],
+    url: database_url,
+    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
@@ -33,16 +33,16 @@ if config_env() == :prod do
       """
 
   config :retrospector, RetrospectorWeb.Endpoint,
-         http: [
-           # Enable IPv6 and bind on all interfaces.
-           # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
-           # See the documentation on https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html
-           # for details about using IPv6 vs IPv4 and loopback vs public addresses.
-           ip: {0, 0, 0, 0, 0, 0, 0, 0},
-           port: String.to_integer(System.fetch_env!("PORT") || "4000")
-         ],
-         check_origin: [System.fetch_env!("ORIGIN") || "localhost"],
-         secret_key_base: secret_key_base
+    http: [
+      # Enable IPv6 and bind on all interfaces.
+      # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
+      # See the documentation on https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html
+      # for details about using IPv6 vs IPv4 and loopback vs public addresses.
+      ip: {0, 0, 0, 0, 0, 0, 0, 0},
+      port: String.to_integer(System.fetch_env!("PORT") || "4000")
+    ],
+    check_origin: [System.fetch_env!("ORIGIN") || "localhost"],
+    secret_key_base: secret_key_base
 
   # ## Using releases
   #
