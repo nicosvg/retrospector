@@ -106,6 +106,7 @@ defmodule Retrospector.Retro do
   end
 
   def start_timer(id) do
+    # 5 minutes
     seconds = 300
     date = DateTime.now!("Etc/UTC")
     reveal_date = date |> DateTime.add(seconds, :second, Calendar.UTCOnlyTimeZoneDatabase)
@@ -120,7 +121,7 @@ defmodule Retrospector.Retro do
     |> Board.changeset(%{reveal_date: reveal_date})
     |> Repo.update()
 
-    PubSub.broadcast(Retrospector.PubSub, "start:" <> id, :start)
+    PubSub.broadcast(Retrospector.PubSub, "start:" <> id, {:start, reveal_date})
 
     :timer.apply_after(seconds * 1000, Retrospector.Retro, :reveal, [id])
   end

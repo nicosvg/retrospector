@@ -1,0 +1,45 @@
+<div class="w-full">
+
+<div class="flex grow justify-center">
+  <div class="flex-column ">
+        <h1 class="text-4xl my-8"> <%= @board.name %></h1>
+        <%= if @seconds != nil && @seconds > 0 do %>
+            <div>Remaining: <%= RetrospectorWeb.BoardLive.format_seconds(@seconds) %></div>
+        <% else %>
+        <button phx-click="start_timer" class="primary-button">Start timer (5 minutes)</button>
+        <% end %>
+
+              <div class="flex mt-8 ">
+                  <%= for c <- @board.columns do %>
+                      <div class="m-4 max-w-xs w-full">
+                          <h3 class="text-2xl text-purple-400 mb-4 font-semibold"><%= c.title %></h3>
+                          <div>
+                            <.form let={f} for={@changeset} phx-submit="save" class="card-form">     
+                            <%= textarea f, :content, class: "flex grow rounded text-gray-600 w-full" %>
+                            <%= hidden_input f, :board_id, value: @board.id %>
+                            <%= hidden_input f, :column_id, value: c.id %>
+                            <div class="flex justify-center">
+                              <%= submit "Add", class: "primary-button" %>
+                            </div>
+                            </.form>
+                          </div>
+
+                          <div class="mt-8 ">
+                            <%= for card <- Enum.filter(@cards, fn card -> card.column_id == c.id end) do %>
+                              <div class="rounded p-4 mb-4 bg-gray-700 text-gray-200 whitespace-normal w-full">
+                                <%= if @revealed do %>
+                                  <%= card.content %>
+                                <% else %>
+                                  Content hidden
+                                <% end %>
+                              </div>
+                            <% end %>
+                          </div>
+                        </div>
+                  <% end %>
+              </div>
+    </div>
+  </div>
+</div>
+
+

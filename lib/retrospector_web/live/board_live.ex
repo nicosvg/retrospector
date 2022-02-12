@@ -20,13 +20,13 @@ defmodule RetrospectorWeb.BoardLive do
        columns: board.columns,
        board: board,
        cards: Enum.flat_map(board.columns, fn c -> c.cards end),
-       revealed: isRevealed(board.reveal_date),
-       seconds: 3000
+       revealed: is_revealed(board.reveal_date),
+       seconds: nil
      )}
   end
 
-  def isRevealed(reveal_date) do
-    reveal_date == nil || DateTime.compare(reveal_date, DateTime.now!("Etc/UTC")) == :lt
+  def is_revealed(reveal_date) do
+    reveal_date != nil && DateTime.compare(reveal_date, DateTime.now!("Etc/UTC")) == :lt
   end
 
   @impl true
@@ -40,15 +40,24 @@ defmodule RetrospectorWeb.BoardLive do
   end
 
   @impl true
-  def handle_info(:start, socket) do
-    Process.send_after(self(), :update_timer, 1000)
-    {:noreply, update(socket, :revealed, fn _r -> false end)}
+  def handle_info({:start, reveal_date}, socket) do
+    Process.send_after(self(), :update_timer, 0)
+    socket = update(socket, :revealed, fn _r -> false end)
+    socket = update(socket, :board, fn b -> %{b | :reveal_date => reveal_date} end)
+    {:noreply, socket}
   end
 
+  @impl true
   def handle_info(:update_timer, socket) do
-    # Process.send_after(self(), :update_timer, 1000)
-    IO.inspect("coucou here")
-    {:noreply, assign(socket, :seconds, fn _s -> 1 end)}
+    date = socket.assigns.board.reveal_date
+    remaining = Time.diff(date, Time.utc_now())
+
+    if remaining < 0 do
+      {:noreply, update(socket, :revealed, fn _ -> true end)}
+    else
+      Process.send_after(self(), :update_timer, 1000)
+      {:noreply, update(socket, :seconds, fn _s -> remaining end)}
+    end
   end
 
   @impl true
@@ -57,8 +66,21 @@ defmodule RetrospectorWeb.BoardLive do
     {:noreply, socket}
   end
 
+  # Handle click on "start timer" button
   def handle_event("start_timer", _value, socket) do
     Retro.start_timer(socket.assigns.board.id)
     {:noreply, socket}
+  end
+
+  def format_seconds(seconds) when seconds == nil, do: "?"
+
+  def format_seconds(seconds) do
+    minutes = div(seconds, 60)
+    sec = rem(seconds, 60)
+    Integer.to_string(minutes) <> ":" <> String.pad_leading(Integer.to_string(sec), 2, "0")
+  end
+
+  def get_reveal(reveal_date) do
+    Time.diff(reveal_date, Time.utc_now())
   end
 end
