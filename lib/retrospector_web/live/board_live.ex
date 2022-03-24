@@ -21,7 +21,8 @@ defmodule RetrospectorWeb.BoardLive do
        board: board,
        cards: Enum.flat_map(board.columns, fn c -> c.cards end),
        revealed: is_revealed(board.reveal_date),
-       seconds: nil
+       seconds: nil,
+       form_params: %{}
      )}
   end
 
@@ -55,7 +56,7 @@ defmodule RetrospectorWeb.BoardLive do
     if remaining < 0 do
       {:noreply, update(socket, :revealed, fn _ -> true end)}
     else
-      Process.send_after(self(), :update_timer, 1000)
+      Process.send_after(self(), :update_timer, 3000)
       {:noreply, update(socket, :seconds, fn _s -> remaining end)}
     end
   end
@@ -69,6 +70,12 @@ defmodule RetrospectorWeb.BoardLive do
   # Handle click on "start timer" button
   def handle_event("start_timer", _value, socket) do
     Retro.start_timer(socket.assigns.board.id)
+    {:noreply, socket}
+  end
+
+  def handle_event("validate", %{"card" => _params}, socket) do
+    IO.inspect("validate")
+
     {:noreply, socket}
   end
 
