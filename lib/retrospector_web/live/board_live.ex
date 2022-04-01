@@ -14,6 +14,7 @@ defmodule RetrospectorWeb.BoardLive do
     if connected?(socket), do: PubSub.subscribe(Retrospector.PubSub, "reveal:" <> board.id)
     if connected?(socket), do: PubSub.subscribe(Retrospector.PubSub, "start:" <> board.id)
 
+    IO.inspect(board.reveal_date, label: "reveal at")
     reveal_in_seconds = get_reveal(board.reveal_date)
 
     if reveal_in_seconds > 0 do
@@ -83,6 +84,9 @@ defmodule RetrospectorWeb.BoardLive do
   end
 
   def get_reveal(reveal_date) do
-    Time.diff(reveal_date, Time.utc_now())
+    case reveal_date do
+      nil -> -1
+      _ -> Time.diff(reveal_date, Time.utc_now())
+    end
   end
 end

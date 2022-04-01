@@ -6,8 +6,6 @@ defmodule RetrospectorWeb.BoardController do
   alias Phoenix.LiveView
 
   def index(conn, _params) do
-    # boards = Retro.list_boards()
-    # render(conn, "index.html", boards: boards)
     LiveView.Controller.live_render(conn, RetrospectorWeb.BoardCardsView, session: %{})
   end
 
@@ -20,7 +18,6 @@ defmodule RetrospectorWeb.BoardController do
     case Retro.create_board(board_params) do
       {:ok, board} ->
         conn
-        |> put_flash(:info, "Board created successfully.")
         |> redirect(to: Routes.board_path(conn, :show, board))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -45,7 +42,6 @@ defmodule RetrospectorWeb.BoardController do
     case Retro.update_board(board, board_params) do
       {:ok, board} ->
         conn
-        |> put_flash(:info, "Board updated successfully.")
         |> redirect(to: Routes.board_path(conn, :show, board))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -58,16 +54,6 @@ defmodule RetrospectorWeb.BoardController do
     {:ok, _board} = Retro.delete_board(board)
 
     conn
-    |> put_flash(:info, "Board deleted successfully.")
     |> redirect(to: Routes.board_path(conn, :index))
-  end
-
-  def start_timer(conn, %{"id" => id}) do
-    IO.puts("Start timer ")
-    IO.inspect(id, label: "board id")
-    Retro.start_timer(id)
-
-    conn
-    |> redirect(to: Routes.board_path(conn, :show, id))
   end
 end
