@@ -56,7 +56,7 @@ defmodule RetrospectorWeb.BoardLive do
     if remaining < 0 do
       {:noreply, update(socket, :revealed, fn _ -> true end)}
     else
-      Process.send_after(self(), :update_timer, 3000)
+      Process.send_after(self(), :update_timer, 1000)
       {:noreply, update(socket, :seconds, fn _s -> remaining end)}
     end
   end

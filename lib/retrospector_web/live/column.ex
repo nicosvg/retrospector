@@ -1,21 +1,42 @@
 defmodule RetrospectorWeb.ColumnForm do
-  use Phoenix.Component
+  use RetrospectorWeb, :live_component
 
-  # Optionally also bring the HTML helpers
-  # use Phoenix.HTML
+  import Phoenix.LiveView.Helpers
 
-  def columnForm(assigns) do
+  alias Retrospector.Retro
+  alias Retrospector.Retro.Card
+
+  # def columnForm(assigns) do
+  #   IO.inspect(assigns, label: "assigns")
+  #   board_id = assigns.board_id
+  #   column_id = assigns.column_id
+  #   changeset = Retro.change_card(%Card{}, %{board_id: board_id, column_id: column_id})
+  #   IO.inspect(changeset, label: "changeset")
+
+  #   ~H"""
+  #     <div>
+  #       <button class="primary-button" phx-click="click">
+  #         bouton
+  #       </button>
+  #     </div>
+  #   """
+  # end
+
+  def render(assigns) do
     ~H"""
-      <div>
-        <.form let={f} for={@changeset} phx-submit="save" class="card-form">
-        <%= textarea f, :content, class: "flex grow rounded text-gray-600 w-full" %>
-        <%= hidden_input f, :board_id, value: @board.id %>
-        <%= hidden_input f, :column_id, value: c.id %>
-        <div class="flex justify-center">
-          <%= submit "Add", class: "primary-button" %>
-        </div>
-        </.form>
+    <form phx-submit="add" phx-target={@myself}>
+      <textarea name="content" class="flex grow rounded text-gray-600 w-full"/>
+      <input name="board_id" value={assigns.board_id} type="hidden"/>
+      <input name="column_id" value={assigns.column_id} type="hidden"/>
+      <div class="flex justify-center">
+        <%= submit "Add", class: "primary-button" %>
       </div>
+    </form>
     """
+  end
+
+  def handle_event("add", card_params, socket) do
+    Retro.create_card(card_params)
+    {:noreply, socket}
   end
 end
