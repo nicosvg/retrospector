@@ -25,7 +25,7 @@ defmodule RetrospectorWeb.ColumnForm do
   def render(assigns) do
     ~H"""
     <form phx-submit="add" phx-target={@myself}>
-      <textarea name="content" class="flex grow rounded text-gray-600 w-full"/>
+      <textarea name="content" class="flex grow rounded text-gray-600 w-full" />
       <input name="board_id" value={assigns.board_id} type="hidden"/>
       <input name="column_id" value={assigns.column_id} type="hidden"/>
       <div class="flex justify-center">
@@ -36,7 +36,12 @@ defmodule RetrospectorWeb.ColumnForm do
   end
 
   def handle_event("add", card_params, socket) do
-    Retro.create_card(card_params)
+    IO.inspect(card_params, label: "card params")
+
+    if card_params["content"] != "" do
+      Retro.create_card(card_params)
+    end
+
     {:noreply, socket}
   end
 end

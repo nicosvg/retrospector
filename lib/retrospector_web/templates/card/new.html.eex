@@ -1,3 +1,0 @@
-<h1>New card for column</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.board_card_path(@conn, :create,  @board_id)) %>
