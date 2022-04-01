@@ -83,6 +83,9 @@ defmodule RetrospectorWeb.BoardLive do
   end
 
   def get_reveal(reveal_date) do
-    Time.diff(reveal_date, Time.utc_now())
+    case reveal_date do
+      nil -> -1
+      _ -> Time.diff(reveal_date, Time.utc_now())
+    end
   end
 end
