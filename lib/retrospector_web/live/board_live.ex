@@ -14,6 +14,12 @@ defmodule RetrospectorWeb.BoardLive do
     if connected?(socket), do: PubSub.subscribe(Retrospector.PubSub, "reveal:" <> board.id)
     if connected?(socket), do: PubSub.subscribe(Retrospector.PubSub, "start:" <> board.id)
 
+    reveal_in_seconds = get_reveal(board.reveal_date)
+
+    if reveal_in_seconds > 0 do
+      Process.send_after(self(), :update_timer, 0)
+    end
+
     {:ok,
      assign(socket,
        changeset: changeset,
@@ -21,7 +27,7 @@ defmodule RetrospectorWeb.BoardLive do
        board: board,
        cards: Enum.flat_map(board.columns, fn c -> c.cards end),
        revealed: is_revealed(board.reveal_date),
-       seconds: nil,
+       seconds: reveal_in_seconds,
        form_params: %{}
      )}
   end
@@ -62,20 +68,9 @@ defmodule RetrospectorWeb.BoardLive do
   end
 
   @impl true
-  def handle_event("save", %{"card" => card_params}, socket) do
-    Retro.create_card(card_params)
-    {:noreply, socket}
-  end
-
   # Handle click on "start timer" button
   def handle_event("start_timer", _value, socket) do
     Retro.start_timer(socket.assigns.board.id)
-    {:noreply, socket}
-  end
-
-  def handle_event("validate", %{"card" => _params}, socket) do
-    IO.inspect("validate")
-
     {:noreply, socket}
   end
 
