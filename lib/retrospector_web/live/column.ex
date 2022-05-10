@@ -4,28 +4,11 @@ defmodule RetrospectorWeb.ColumnForm do
   import Phoenix.LiveView.Helpers
 
   alias Retrospector.Retro
-  alias Retrospector.Retro.Card
-
-  # def columnForm(assigns) do
-  #   IO.inspect(assigns, label: "assigns")
-  #   board_id = assigns.board_id
-  #   column_id = assigns.column_id
-  #   changeset = Retro.change_card(%Card{}, %{board_id: board_id, column_id: column_id})
-  #   IO.inspect(changeset, label: "changeset")
-
-  #   ~H"""
-  #     <div>
-  #       <button class="primary-button" phx-click="click">
-  #         bouton
-  #       </button>
-  #     </div>
-  #   """
-  # end
 
   def render(assigns) do
     ~H"""
     <form phx-submit="add" phx-target={@myself}>
-      <textarea name="content" class="flex grow rounded text-gray-600 w-full" />
+      <textarea name="content" class="flex grow rounded text-gray-600 w-full" ><%= assigns.content %></textarea>
       <input name="board_id" value={assigns.board_id} type="hidden"/>
       <input name="column_id" value={assigns.column_id} type="hidden"/>
       <div class="flex justify-center">
@@ -35,6 +18,10 @@ defmodule RetrospectorWeb.ColumnForm do
     """
   end
 
+  def mount(socket) do
+    {:ok, assign(socket, :content, "")}
+  end
+
   def handle_event("add", card_params, socket) do
     IO.inspect(card_params, label: "card params")
 
@@ -42,6 +29,6 @@ defmodule RetrospectorWeb.ColumnForm do
       Retro.create_card(card_params)
     end
 
-    {:noreply, socket}
+    {:noreply, update(socket, :content, fn _s -> "" end)}
   end
 end
