@@ -7,8 +7,8 @@ defmodule RetrospectorWeb.ColumnForm do
 
   def render(assigns) do
     ~H"""
-    <form phx-submit="add" phx-target={@myself}>
-      <textarea name="content" class="flex grow rounded text-gray-600 w-full" ><%= assigns.content %></textarea>
+    <form id={"col-form-" <> assigns.column_id} phx-submit="add" phx-target={@myself}>
+      <textarea id={"col-input-" <> assigns.column_id} name="content" phx-hook="ClearTextArea" class="flex grow rounded text-gray-600 w-full"><%= @content %></textarea>
       <input name="board_id" value={assigns.board_id} type="hidden"/>
       <input name="column_id" value={assigns.column_id} type="hidden"/>
       <div class="flex justify-center">
@@ -23,12 +23,13 @@ defmodule RetrospectorWeb.ColumnForm do
   end
 
   def handle_event("add", card_params, socket) do
-    IO.inspect(card_params, label: "card params")
-
     if card_params["content"] != "" do
       Retro.create_card(card_params)
+      # Force update of value to trigger the update hook on the text area
+      {:noreply, update(socket, :content, fn s -> s <> " " end)}
+    else
+      {:noreply, socket}
     end
 
-    {:noreply, update(socket, :content, fn _s -> "" end)}
   end
 end
