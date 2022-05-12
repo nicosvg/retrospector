@@ -4,6 +4,9 @@ defmodule RetrospectorWeb.BoardLive do
   alias Phoenix.PubSub
   alias Retrospector.Retro
   alias Retrospector.Retro.Card
+  alias RetrospectorWeb.Presence
+
+  @presence "retrospector:presence"
 
   @impl true
   def mount(_params, session, socket) do
@@ -21,16 +24,37 @@ defmodule RetrospectorWeb.BoardLive do
       Process.send_after(self(), :update_timer, 0)
     end
 
+    name = for _ <- 1..5, into: "", do: <<Enum.random('abcdefghijklmnopqrstuvwxyz')>>
+    id = :crypto.strong_rand_bytes(10)
+    user = %{id: id, name: name}
+    session = Map.put(session, "current_user", user)
+
+    if connected?(socket) do
+      user = session["current_user"]
+
+      {:ok, _} =
+        Presence.track(self(), @presence, user[:id], %{
+          name: user[:name],
+          joined_at: :os.system_time(:seconds)
+        })
+
+      PubSub.subscribe(Retrospector.PubSub, @presence)
+    end
+
     {:ok,
-     assign(socket,
+     socket
+     |> assign(
        changeset: changeset,
+       current_user: session["current_user"],
+       users: %{},
        columns: board.columns,
        board: board,
        cards: Enum.flat_map(board.columns, fn c -> c.cards end),
        revealed: is_revealed(board.reveal_date),
        seconds: reveal_in_seconds,
        form_params: %{}
-     )}
+     )
+     |> handle_joins(Presence.list(@presence))}
   end
 
   def is_revealed(reveal_date) do
@@ -69,6 +93,16 @@ defmodule RetrospectorWeb.BoardLive do
   end
 
   @impl true
+  def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
+    {
+      :noreply,
+      socket
+      |> handle_leaves(diff.leaves)
+      |> handle_joins(diff.joins)
+    }
+  end
+
+  @impl true
   # Handle click on "start timer" button
   def handle_event("start_timer", _value, socket) do
     Retro.start_timer(socket.assigns.board.id)
@@ -88,5 +122,20 @@ defmodule RetrospectorWeb.BoardLive do
       nil -> -1
       _ -> Time.diff(reveal_date, Time.utc_now())
     end
+  end
+
+  defp handle_joins(socket, joins) do
+    IO.inspect joins, label: "joins"
+    IO.inspect socket.assigns.users, label: "current users"
+    Enum.reduce(joins, socket, fn {user, %{metas: [meta | _]}}, socket ->
+      IO.inspect user, label: "adding user"
+      assign(socket, :users, Map.put(socket.assigns.users, user, meta))
+    end)
+  end
+
+  defp handle_leaves(socket, leaves) do
+    Enum.reduce(leaves, socket, fn {user, _}, socket ->
+      assign(socket, :users, Map.delete(socket.assigns.users, user))
+    end)
   end
 end

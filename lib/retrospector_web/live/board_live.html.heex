@@ -7,6 +7,7 @@
         <% else %>
             <button phx-click="start_timer" class="primary-button">Start timer (5 minutes)</button>
         <% end %>
+        <%= live_component RetrospectorWeb.Components.OnlineUsers, current_user: @current_user, users: @users %>
               <div class="flex mt-8 ">
                   <%= for c <- @board.columns do %>
 

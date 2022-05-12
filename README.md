@@ -22,4 +22,10 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 # TODO
 
-- [ ] Ajouter un événement pub/sub "reveal" qui indiquera quand le tableau doit être affiché en entier
+- [x] Ajouter un événement pub/sub "reveal" qui indiquera quand le tableau doit être affiché en entier
+- [ ] Voir le nombre d'utilisateurs présents
+- [ ] Forcer l'arrêt du timer
+
+# Docs
+
+- https://fullstackphoenix.com/tutorials/phoenix-presence-with-phoenix-liveview

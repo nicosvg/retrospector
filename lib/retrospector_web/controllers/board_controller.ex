@@ -6,7 +6,6 @@ defmodule RetrospectorWeb.BoardController do
   alias Phoenix.LiveView
 
   def index(conn, _params) do
-    LiveView.Controller.live_render(conn, RetrospectorWeb.BoardCardsView, session: %{})
   end
 
   def new(conn, _params) do

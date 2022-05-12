@@ -14,7 +14,9 @@ defmodule Retrospector.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Retrospector.PubSub},
       # Start the Endpoint (http/https)
-      RetrospectorWeb.Endpoint
+      RetrospectorWeb.Endpoint,
+      # Start Presence module
+      RetrospectorWeb.Presence
       # Start a worker by calling: Retrospector.Worker.start_link(arg)
       # {Retrospector.Worker, arg}
     ]
