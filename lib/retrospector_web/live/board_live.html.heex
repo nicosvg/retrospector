@@ -1,17 +1,20 @@
 <div class="w-full flex grow justify-center">
 
   <div class="flex-column ">
-        <h1 class="text-4xl my-8"> <%= @board.name %></h1>
+        <div class="flex flex-row items-center justify-between">
+          <h1 class="text-4xl my-8"> <%= @board.name %></h1>
+          <%= live_component RetrospectorWeb.Components.OnlineUsers, current_user: @current_user, users: @users %>
+        </div>
         <%= if @seconds != nil && @seconds > 0 do %>
-            <div>Remaining: <%= RetrospectorWeb.BoardLive.format_seconds(@seconds) %></div>
+            <div class="flex flex-row items-center justify-between">
+              <div>Remaining: <%= RetrospectorWeb.BoardLive.format_seconds(@seconds) %></div>
+              <button phx-click="stop_timer" class="warning-button">Stop timer</button>
+            </div>
         <% else %>
             <button phx-click="start_timer" class="primary-button">Start timer (5 minutes)</button>
         <% end %>
-        <%= live_component RetrospectorWeb.Components.OnlineUsers, current_user: @current_user, users: @users %>
               <div class="flex mt-8 ">
                   <%= for c <- @board.columns do %>
-
-
                       <div class="m-4 max-w-xs w-full">
                           <h3 class="text-2xl text-purple-400 mb-4 font-semibold"><%= c.title %></h3>
                           <.live_component module={RetrospectorWeb.ColumnForm} id={c.id} column_id={c.id} board_id={@board.id} />
