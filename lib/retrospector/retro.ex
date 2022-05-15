@@ -109,7 +109,7 @@ defmodule Retrospector.Retro do
     Logger.info("Start timer for board: #{board_id}")
 
     # 5 minutes
-    seconds = 30
+    seconds = 300
     date = DateTime.now!("Etc/UTC")
     reveal_date = date |> DateTime.add(seconds, :second, Calendar.UTCOnlyTimeZoneDatabase)
 
@@ -129,7 +129,7 @@ defmodule Retrospector.Retro do
   end
 
   def stop_timer(board_id) do
-    Logger.info("Stopping timer for board: #{board_id}")
+    Logger.debug("Stopping timer for board: #{board_id}")
 
     reveal_date = DateTime.now!("Etc/UTC")
 
