@@ -5,6 +5,7 @@ defmodule RetrospectorWeb.Presence do
   See the [`Phoenix.Presence`](https://hexdocs.pm/phoenix/Phoenix.Presence.html)
   docs for more details.
   """
-  use Phoenix.Presence, otp_app: :retrospector,
-                        pubsub_server: Retrospector.PubSub
+  use Phoenix.Presence,
+    otp_app: :retrospector,
+    pubsub_server: Retrospector.PubSub
 end

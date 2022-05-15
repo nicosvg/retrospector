@@ -68,11 +68,10 @@ defmodule RetrospectorWeb.BoardLive do
   @impl true
   def handle_info(:reveal, socket) do
     {:noreply,
-    socket
-    |> update(:revealed, fn _r -> true end)
-    |> update(:seconds, fn _r -> 0 end)
-    |> update(:board, fn b -> %{b | reveal_date: DateTime.now!("Etc/UTC")} end)
-  }
+     socket
+     |> update(:revealed, fn _r -> true end)
+     |> update(:seconds, fn _r -> 0 end)
+     |> update(:board, fn b -> %{b | reveal_date: DateTime.now!("Etc/UTC")} end)}
   end
 
   @impl true
@@ -112,6 +111,7 @@ defmodule RetrospectorWeb.BoardLive do
     Retro.start_timer(socket.assigns.board.id)
     {:noreply, socket}
   end
+
   @impl true
   # Handle click on "start timer" button
   def handle_event("stop_timer", _value, socket) do
@@ -135,10 +135,7 @@ defmodule RetrospectorWeb.BoardLive do
   end
 
   defp handle_joins(socket, joins) do
-    IO.inspect joins, label: "joins"
-    IO.inspect socket.assigns.users, label: "current users"
     Enum.reduce(joins, socket, fn {user, %{metas: [meta | _]}}, socket ->
-      IO.inspect user, label: "adding user"
       assign(socket, :users, Map.put(socket.assigns.users, user, meta))
     end)
   end
