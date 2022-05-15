@@ -23,9 +23,15 @@ defmodule RetrospectorWeb.BoardLive do
       Process.send_after(self(), :update_timer, 0)
     end
 
+    # Generate random name for users to test display, this is currently not used
+    # Later, users may be able to enter their name
     name = for _ <- 1..5, into: "", do: <<Enum.random('abcdefghijklmnopqrstuvwxyz')>>
-    id = :crypto.strong_rand_bytes(10)
-    user = %{id: id, name: name}
+    # Get user colour
+    current_users = Enum.count(Presence.list(@presence))
+    |> IO.inspect(label: "presences")
+    colours = ["sky", "amber", "teal"]
+    user = %{id: Ecto.UUID.generate, name: name, colour: Enum.at(colours, current_users, "gray")}
+    IO.inspect(user, label: "user")
     session = Map.put(session, "current_user", user)
 
     if connected?(socket) do
@@ -34,6 +40,7 @@ defmodule RetrospectorWeb.BoardLive do
       {:ok, _} =
         Presence.track(self(), @presence, user[:id], %{
           name: user[:name],
+          colour: user[:colour],
           joined_at: :os.system_time(:seconds)
         })
 
