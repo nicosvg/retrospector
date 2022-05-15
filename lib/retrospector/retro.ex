@@ -131,16 +131,12 @@ defmodule Retrospector.Retro do
   def stop_timer(board_id) do
     Logger.info("Stopping timer for board: #{board_id}")
 
-
     reveal_date = DateTime.now!("Etc/UTC")
 
-    board =
-      Repo.one(
-        from board in Board,
-          where: board.id == ^board_id
-      )
-
-    board
+    Repo.one(
+      from board in Board,
+        where: board.id == ^board_id
+    )
     |> Board.changeset(%{reveal_date: reveal_date})
     |> Repo.update()
 
@@ -148,8 +144,18 @@ defmodule Retrospector.Retro do
   end
 
   def reveal(board_id) do
-    Logger.info("Revealing board: #{board_id}")
-    PubSub.broadcast(Retrospector.PubSub, "reveal:" <> board_id, :reveal)
+    board =
+      Repo.one(
+        from board in Board,
+          where: board.id == ^board_id
+      )
+
+    if DateTime.compare(board.reveal_date, DateTime.now!("Etc/UTC")) == :lt do
+      Logger.debug("Revealing board: #{board_id}")
+      PubSub.broadcast(Retrospector.PubSub, "reveal:" <> board_id, :reveal)
+    else
+      Logger.debug("Not revealing board, timer running")
+    end
   end
 
   @doc """
