@@ -17,7 +17,6 @@ defmodule RetrospectorWeb.BoardLive do
     if connected?(socket), do: PubSub.subscribe(Retrospector.PubSub, "reveal:" <> board.id)
     if connected?(socket), do: PubSub.subscribe(Retrospector.PubSub, "start:" <> board.id)
 
-    IO.inspect(board.reveal_date, label: "reveal at")
     reveal_in_seconds = get_reveal(board.reveal_date)
 
     if reveal_in_seconds > 0 do
@@ -68,7 +67,12 @@ defmodule RetrospectorWeb.BoardLive do
 
   @impl true
   def handle_info(:reveal, socket) do
-    {:noreply, update(socket, :revealed, fn _r -> true end)}
+    {:noreply,
+    socket
+    |> update(:revealed, fn _r -> true end)
+    |> update(:seconds, fn _r -> 0 end)
+    |> update(:board, fn b -> %{b | reveal_date: DateTime.now!("Etc/UTC")} end)
+  }
   end
 
   @impl true
@@ -106,6 +110,12 @@ defmodule RetrospectorWeb.BoardLive do
   # Handle click on "start timer" button
   def handle_event("start_timer", _value, socket) do
     Retro.start_timer(socket.assigns.board.id)
+    {:noreply, socket}
+  end
+  @impl true
+  # Handle click on "start timer" button
+  def handle_event("stop_timer", _value, socket) do
+    Retro.stop_timer(socket.assigns.board.id)
     {:noreply, socket}
   end
 

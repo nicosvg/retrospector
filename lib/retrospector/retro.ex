@@ -2,7 +2,7 @@ defmodule Retrospector.Retro do
   @moduledoc """
   The Retro context.
   """
-
+  require Logger
   import Ecto.Query, warn: false
   alias Phoenix.PubSub
 
@@ -105,29 +105,57 @@ defmodule Retrospector.Retro do
     |> Repo.update()
   end
 
-  def start_timer(id) do
+  def start_timer(board_id) do
+    Logger.info("Start timer for board: #{board_id}")
+
     # 5 minutes
-    seconds = 300
+    seconds = 30
     date = DateTime.now!("Etc/UTC")
     reveal_date = date |> DateTime.add(seconds, :second, Calendar.UTCOnlyTimeZoneDatabase)
 
     board =
       Repo.one(
         from board in Board,
-          where: board.id == ^id
+          where: board.id == ^board_id
       )
 
     board
     |> Board.changeset(%{reveal_date: reveal_date})
     |> Repo.update()
 
-    PubSub.broadcast(Retrospector.PubSub, "start:" <> id, {:start, reveal_date})
+    PubSub.broadcast(Retrospector.PubSub, "start:" <> board_id, {:start, reveal_date})
 
-    :timer.apply_after(seconds * 1000, Retrospector.Retro, :reveal, [id])
+    :timer.apply_after(seconds * 1000, Retrospector.Retro, :reveal, [board_id])
   end
 
-  def reveal(id) do
-    PubSub.broadcast(Retrospector.PubSub, "reveal:" <> id, :reveal)
+  def stop_timer(board_id) do
+    Logger.info("Stopping timer for board: #{board_id}")
+
+    reveal_date = DateTime.now!("Etc/UTC")
+
+    Repo.one(
+      from board in Board,
+        where: board.id == ^board_id
+    )
+    |> Board.changeset(%{reveal_date: reveal_date})
+    |> Repo.update()
+
+    reveal(board_id)
+  end
+
+  def reveal(board_id) do
+    board =
+      Repo.one(
+        from board in Board,
+          where: board.id == ^board_id
+      )
+
+    if DateTime.compare(board.reveal_date, DateTime.now!("Etc/UTC")) == :lt do
+      Logger.debug("Revealing board: #{board_id}")
+      PubSub.broadcast(Retrospector.PubSub, "reveal:" <> board_id, :reveal)
+    else
+      Logger.debug("Not revealing board, timer running")
+    end
   end
 
   @doc """
