@@ -192,9 +192,12 @@ defmodule Retrospector.Retro do
   end
 
   def create_card(attrs \\ %{}) do
+    Logger.debug("Creating card")
+
     %Card{}
     |> Card.changeset(attrs)
     |> Repo.insert()
+    |> IO.inspect
     |> broadcast(:card_created)
   end
 
