@@ -3,9 +3,8 @@ defmodule RetrospectorWeb.BoardController do
 
   alias Retrospector.Retro
   alias Retrospector.Retro.Board
-  alias Phoenix.LiveView
 
-  def index(conn, _params) do
+  def index(_conn, _params) do
   end
 
   def new(conn, _params) do
