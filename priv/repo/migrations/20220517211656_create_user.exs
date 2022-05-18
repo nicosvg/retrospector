@@ -6,6 +6,7 @@ defmodule Retrospector.Repo.Migrations.CreateUser do
       add :id, :uuid, primary_key: true, null: false
       add :name, :string
       add :color, :string
+      add :board_id, references(:boards, type: :uuid)
     end
 
     alter table(:cards) do

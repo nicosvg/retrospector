@@ -7,13 +7,14 @@ defmodule Retrospector.Retro.User do
   schema "users" do
     field :name, :string
     field :color, :string
+    field :board_id, Ecto.UUID
   end
 
   @doc false
   def changeset(column, attrs) do
     column
-    |> cast(attrs, [:id, :name, :color])
-    |> validate_required([:color])
+    |> cast(attrs, [:id, :name, :color, :board_id])
+    |> validate_required([:color, :board_id])
     |> IO.inspect
   end
 end

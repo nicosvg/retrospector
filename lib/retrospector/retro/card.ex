@@ -7,8 +7,6 @@ defmodule Retrospector.Retro.Card do
     field :column_id, Ecto.UUID
     field :user_id, Ecto.UUID
     field :content, :string
-    # belongs_to :user, Retrospector.Retro.User
-
     timestamps()
   end
 

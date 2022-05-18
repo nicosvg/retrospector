@@ -45,8 +45,8 @@ defmodule RetrospectorWeb.BoardLive do
         })
 
       PubSub.subscribe(Retrospector.PubSub, @presence)
-
-      Retro.create_user(user)
+      IO.inspect(board, label: "board")
+      Retro.create_user(%{user | board_id: board.id})
     end
 
     {:ok,
