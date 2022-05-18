@@ -20,9 +20,9 @@ defmodule RetrospectorWeb.Components.OnlineUsers do
     <div>
       <%= for {user_id, user} <- @users do %>
         <%= if user_id == @current_user[:id] do %>
-          <span class={"text-xs rounded px-2 py-1 " <> colors[user[:colour]]}>me</span>
+          <span class={"text-xs rounded px-2 py-1 " <> colors[user[:color]]}>me</span>
         <% else %>
-          <span class={"text-xs rounded px-2 py-1 w-4 " <> colors[user[:colour]]}>&nbsp</span>
+          <span class={"text-xs rounded px-2 py-1 w-4 " <> colors[user[:color]]}>&nbsp</span>
         <% end %>
       <% end %>
     </div>

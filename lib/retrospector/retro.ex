@@ -10,6 +10,7 @@ defmodule Retrospector.Retro do
   alias Retrospector.Retro.Board
   alias Retrospector.Retro.Column
   alias Retrospector.Retro.Card
+  alias Retrospector.Retro.User
 
   @doc """
   Returns the list of boards.
@@ -196,9 +197,19 @@ defmodule Retrospector.Retro do
 
     %Card{}
     |> Card.changeset(attrs)
+    |> IO.inspect
     |> Repo.insert()
     |> IO.inspect
     |> broadcast(:card_created)
+  end
+
+  def create_user(attrs \\ %{}) do
+    Logger.debug("Creating user")
+
+    %User{}
+    |> User.changeset(attrs)
+    |> Repo.insert()
+    |> IO.inspect
   end
 
   def subscribe do

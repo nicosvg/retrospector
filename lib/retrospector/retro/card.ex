@@ -5,9 +5,9 @@ defmodule Retrospector.Retro.Card do
   schema "cards" do
     field :board_id, Ecto.UUID
     field :column_id, Ecto.UUID
+    field :user_id, Ecto.UUID
     field :content, :string
-
-    belongs_to :user, Retrospector.Retro.User
+    # belongs_to :user, Retrospector.Retro.User
 
     timestamps()
   end
