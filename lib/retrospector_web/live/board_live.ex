@@ -30,7 +30,7 @@ defmodule RetrospectorWeb.BoardLive do
     current_users = Enum.count(Presence.list(@presence))
     |> IO.inspect(label: "presences")
     colors = ["sky", "amber", "teal"]
-    user = %{id: Ecto.UUID.generate, name: name, color: Enum.at(colors, current_users, "gray")}
+    user = %{id: Ecto.UUID.generate, name: name, color: Enum.at(colors, current_users, "gray"), board_id: board.id}
     IO.inspect(user, label: "user")
     session = Map.put(session, "current_user", user)
 
@@ -46,7 +46,7 @@ defmodule RetrospectorWeb.BoardLive do
 
       PubSub.subscribe(Retrospector.PubSub, @presence)
       IO.inspect(board, label: "board")
-      Retro.create_user(%{user | board_id: board.id})
+      Retro.create_user(user)
     end
 
     {:ok,
