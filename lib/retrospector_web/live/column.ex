@@ -24,7 +24,6 @@ defmodule RetrospectorWeb.ColumnForm do
   end
 
   def handle_event("add", card_params, socket) do
-    IO.inspect card_params, label: "params"
     if card_params["content"] != "" do
       Retro.create_card(card_params)
       # Force update of value to trigger the update hook on the text area

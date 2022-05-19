@@ -203,6 +203,14 @@ defmodule Retrospector.Retro do
     |> IO.inspect
     |> broadcast(:card_created)
   end
+  
+  def get_users(board_id) do
+    Repo.all(
+      from user in User,
+        where: user.board_id == ^board_id
+    )
+    |> IO.inspect(label: "list users")
+  end
 
   def create_user(attrs \\ %{}) do
     Logger.debug("Creating user")

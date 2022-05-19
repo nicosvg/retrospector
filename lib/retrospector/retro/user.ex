@@ -15,6 +15,5 @@ defmodule Retrospector.Retro.User do
     column
     |> cast(attrs, [:id, :name, :color, :board_id])
     |> validate_required([:color, :board_id])
-    |> IO.inspect
   end
 end

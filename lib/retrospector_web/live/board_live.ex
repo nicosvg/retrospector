@@ -27,11 +27,11 @@ defmodule RetrospectorWeb.BoardLive do
     # Later, users may be able to enter their name
     name = for _ <- 1..5, into: "", do: <<Enum.random('abcdefghijklmnopqrstuvwxyz')>>
     # Get user color
-    current_users = Enum.count(Presence.list(@presence))
-    |> IO.inspect(label: "presences")
+    # current_users = Enum.count(Presence.list(@presence))
+    current_users = Retro.get_users(board.id)
+    IO.inspect(current_users, label: "current users")
     colors = ["sky", "amber", "teal"]
     user = %{id: Ecto.UUID.generate, name: name, color: Enum.at(colors, current_users, "gray"), board_id: board.id}
-    IO.inspect(user, label: "user")
     session = Map.put(session, "current_user", user)
 
     if connected?(socket) do
@@ -45,7 +45,6 @@ defmodule RetrospectorWeb.BoardLive do
         })
 
       PubSub.subscribe(Retrospector.PubSub, @presence)
-      IO.inspect(board, label: "board")
       Retro.create_user(user)
     end
 
