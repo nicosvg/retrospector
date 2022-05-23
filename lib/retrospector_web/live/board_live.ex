@@ -28,10 +28,10 @@ defmodule RetrospectorWeb.BoardLive do
     name = for _ <- 1..5, into: "", do: <<Enum.random('abcdefghijklmnopqrstuvwxyz')>>
     # Get user color
     # current_users = Enum.count(Presence.list(@presence))
-    current_users = Retro.get_users(board.id)
-    IO.inspect(current_users, label: "current users")
+    board_users = Retro.get_users(board.id)
+    IO.inspect(board_users, label: "board users")
     colors = ["sky", "amber", "teal"]
-    user = %{id: Ecto.UUID.generate, name: name, color: Enum.at(colors, Enum.count(current_users), "gray"), board_id: board.id}
+    user = %{id: Ecto.UUID.generate, name: name, color: Enum.at(colors, Enum.count(board_users), "gray"), board_id: board.id}
     session = Map.put(session, "current_user", user)
 
     if connected?(socket) do
@@ -39,6 +39,7 @@ defmodule RetrospectorWeb.BoardLive do
 
       {:ok, _} =
         Presence.track(self(), @presence, user[:id], %{
+          board_id: board.id,
           name: user[:name],
           color: user[:color],
           joined_at: :os.system_time(:seconds)
@@ -54,6 +55,7 @@ defmodule RetrospectorWeb.BoardLive do
        changeset: changeset,
        current_user: session["current_user"],
        users: %{},
+       board_users: [user | board_users],
        columns: board.columns,
        board: board,
        cards: Enum.flat_map(board.columns, fn c -> c.cards end),
@@ -143,15 +145,14 @@ defmodule RetrospectorWeb.BoardLive do
   end
 
   defp handle_joins(socket, joins) do
-    IO.inspect joins, label: "joins"
-    IO.inspect socket.assigns.users, label: "current users"
     Enum.reduce(joins, socket, fn {user, %{metas: [meta | _]}}, socket ->
-      IO.inspect user, label: "adding user"
-      assign(socket, :users, Map.put(socket.assigns.users, user, meta))
+      if socket.assigns && meta.board_id == socket.assigns.board.id do
+        assign(socket, :users, Map.put(socket.assigns.users, user, meta))
+      end
     end)
   end
 
-  defp handle_leaves(socket, leaves) do
+  defp handle_leaves(socket, leaves ) do
     Enum.reduce(leaves, socket, fn {user, _}, socket ->
       assign(socket, :users, Map.delete(socket.assigns.users, user))
     end)

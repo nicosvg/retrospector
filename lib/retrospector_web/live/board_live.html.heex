@@ -21,7 +21,7 @@
 
                     <div class="mt-8 ">
                       <%= for card <- Enum.filter(@cards, fn card -> card.column_id == c.id end) do %>
-                      <%= live_component RetrospectorWeb.Components.Card, card: card, current_user: @current_user, users: @users, revealed: @revealed %>
+                      <%= live_component RetrospectorWeb.Components.Card, card: card, current_user: @current_user, users: @board_users, revealed: @revealed %>
                       <% end %>
                     </div>
                   </div>

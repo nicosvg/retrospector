@@ -74,7 +74,6 @@ defmodule Retrospector.Retro do
     %Board{}
     |> Board.changeset(attrs)
     |> Repo.insert()
-    |> IO.inspect()
     |> create_default_columns
   end
 
@@ -198,9 +197,7 @@ defmodule Retrospector.Retro do
 
     %Card{}
     |> Card.changeset(attrs)
-    |> IO.inspect
     |> Repo.insert()
-    |> IO.inspect
     |> broadcast(:card_created)
   end
   
@@ -209,7 +206,6 @@ defmodule Retrospector.Retro do
       from user in User,
         where: user.board_id == ^board_id
     )
-    |> IO.inspect(label: "list users")
   end
 
   def create_user(attrs \\ %{}) do
@@ -218,7 +214,6 @@ defmodule Retrospector.Retro do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
-    |> IO.inspect
   end
 
   def subscribe do
