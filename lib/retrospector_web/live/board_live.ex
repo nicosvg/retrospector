@@ -146,8 +146,11 @@ defmodule RetrospectorWeb.BoardLive do
 
   defp handle_joins(socket, joins) do
     Enum.reduce(joins, socket, fn {user, %{metas: [meta | _]}}, socket ->
-      if socket.assigns && meta.board_id == socket.assigns.board.id do
+      IO.inspect socket, label: "socket"
+      if socket.assigns.board != nil && meta.board_id == socket.assigns.board.id do
         assign(socket, :users, Map.put(socket.assigns.users, user, meta))
+        else
+        {:ok, socket}
       end
     end)
   end
