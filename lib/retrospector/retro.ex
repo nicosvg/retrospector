@@ -10,6 +10,7 @@ defmodule Retrospector.Retro do
   alias Retrospector.Retro.Board
   alias Retrospector.Retro.Column
   alias Retrospector.Retro.Card
+  alias Retrospector.Retro.User
 
   @doc """
   Returns the list of boards.
@@ -46,6 +47,7 @@ defmodule Retrospector.Retro do
         where: board.id == ^id,
         preload: [:columns, columns: :cards]
     )
+    |> IO.inspect(label: "loaded boads")
   end
 
   def get_column(id) do
@@ -192,10 +194,31 @@ defmodule Retrospector.Retro do
   end
 
   def create_card(attrs \\ %{}) do
+    Logger.debug("Creating card")
+
     %Card{}
     |> Card.changeset(attrs)
+    |> IO.inspect
     |> Repo.insert()
+    |> IO.inspect
     |> broadcast(:card_created)
+  end
+  
+  def get_users(board_id) do
+    Repo.all(
+      from user in User,
+        where: user.board_id == ^board_id
+    )
+    |> IO.inspect(label: "list users")
+  end
+
+  def create_user(attrs \\ %{}) do
+    Logger.debug("Creating user")
+
+    %User{}
+    |> User.changeset(attrs)
+    |> Repo.insert()
+    |> IO.inspect
   end
 
   def subscribe do

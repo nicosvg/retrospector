@@ -11,6 +11,7 @@ defmodule RetrospectorWeb.ColumnForm do
       <textarea id={"col-input-" <> assigns.column_id} name="content" phx-hook="ClearTextArea" class="flex grow rounded text-gray-600 w-full"><%= @content %></textarea>
       <input name="board_id" value={assigns.board_id} type="hidden"/>
       <input name="column_id" value={assigns.column_id} type="hidden"/>
+      <input name="user_id" value={assigns.user_id} type="hidden"/>
       <div class="flex justify-center">
         <%= submit "Add", class: "primary-button" %>
       </div>
