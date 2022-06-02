@@ -47,7 +47,6 @@ defmodule Retrospector.Retro do
         where: board.id == ^id,
         preload: [:columns, columns: :cards]
     )
-    |> IO.inspect(label: "loaded boads")
   end
 
   def get_column(id) do

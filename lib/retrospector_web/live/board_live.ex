@@ -5,6 +5,7 @@ defmodule RetrospectorWeb.BoardLive do
   alias Retrospector.Retro
   alias Retrospector.Retro.Card
   alias RetrospectorWeb.Presence
+  alias RetrospectorWeb.Colors
 
   @presence "retrospector:presence"
 
@@ -29,9 +30,14 @@ defmodule RetrospectorWeb.BoardLive do
     # Get user color
     # current_users = Enum.count(Presence.list(@presence))
     board_users = Retro.get_users(board.id)
-    IO.inspect(board_users, label: "board users")
-    colors = ["sky", "amber", "teal"]
-    user = %{id: Ecto.UUID.generate, name: name, color: Enum.at(colors, Enum.count(board_users), "gray"), board_id: board.id}
+
+    user = %{
+      id: Ecto.UUID.generate(),
+      name: name,
+      color: Colors.getColorForIndex(Enum.count(board_users)),
+      board_id: board.id
+    }
+
     session = Map.put(session, "current_user", user)
 
     if connected?(socket) do
@@ -42,6 +48,7 @@ defmodule RetrospectorWeb.BoardLive do
           board_id: board.id,
           name: user[:name],
           color: user[:color],
+          id: user[:id],
           joined_at: :os.system_time(:seconds)
         })
 
@@ -49,12 +56,16 @@ defmodule RetrospectorWeb.BoardLive do
       Retro.create_user(user)
     end
 
+# TODO Save only connected users (presence) in assigns
+# Do not save color in database
+# Compute color from order in list of connected users, maybe sort by connection date?
+
     {:ok,
      socket
      |> assign(
        changeset: changeset,
        current_user: session["current_user"],
-       users: %{},
+       connected_users: 1,
        board_users: [user | board_users],
        columns: board.columns,
        board: board,
@@ -78,11 +89,10 @@ defmodule RetrospectorWeb.BoardLive do
   @impl true
   def handle_info(:reveal, socket) do
     {:noreply,
-    socket
-    |> update(:revealed, fn _r -> true end)
-    |> update(:seconds, fn _r -> 0 end)
-    |> update(:board, fn b -> %{b | reveal_date: DateTime.now!("Etc/UTC")} end)
-  }
+     socket
+     |> update(:revealed, fn _r -> true end)
+     |> update(:seconds, fn _r -> 0 end)
+     |> update(:board, fn b -> %{b | reveal_date: DateTime.now!("Etc/UTC")} end)}
   end
 
   @impl true
@@ -122,6 +132,7 @@ defmodule RetrospectorWeb.BoardLive do
     Retro.start_timer(socket.assigns.board.id)
     {:noreply, socket}
   end
+
   @impl true
   # Handle click on "start timer" button
   def handle_event("stop_timer", _value, socket) do
@@ -145,19 +156,19 @@ defmodule RetrospectorWeb.BoardLive do
   end
 
   defp handle_joins(socket, joins) do
-    Enum.reduce(joins, socket, fn {user, %{metas: [meta | _]}}, socket ->
-      IO.inspect socket, label: "socket"
+    Enum.reduce(joins, socket, fn {_user, %{metas: [meta | _]}}, socket ->
       if socket.assigns.board != nil && meta.board_id == socket.assigns.board.id do
-        assign(socket, :users, Map.put(socket.assigns.users, user, meta))
-        else
+        assign(socket, :board_users, [meta | socket.assigns.board_users])
+        |> assign(:connected_users, socket.assigns.connected_users+1)
+      else
         socket
       end
     end)
   end
 
-  defp handle_leaves(socket, leaves ) do
+  defp handle_leaves(socket, leaves) do
     Enum.reduce(leaves, socket, fn {user, _}, socket ->
-      assign(socket, :users, Map.delete(socket.assigns.users, user))
+      assign(socket, :board_users, Map.delete(socket.assigns.board_users, user))
     end)
   end
 end

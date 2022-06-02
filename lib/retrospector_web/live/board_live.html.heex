@@ -3,7 +3,7 @@
   <div class="flex-column ">
         <div class="flex flex-row items-center justify-between">
           <h1 class="text-4xl my-8"> <%= @board.name %></h1>
-          <%= live_component RetrospectorWeb.Components.OnlineUsers, current_user: @current_user, users: @users %>
+          <%= live_component RetrospectorWeb.Components.OnlineUsers, current_user: @current_user, users: @board_users %>
         </div>
         <%= if @seconds != nil && @seconds > 0 do %>
             <div class="flex flex-row items-center justify-between">
