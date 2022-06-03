@@ -65,7 +65,7 @@ defmodule RetrospectorWeb.BoardLive do
      |> assign(
        changeset: changeset,
        current_user: session["current_user"],
-       connected_users: 1,
+       connected_users: %{},
        board_users: [user | board_users],
        columns: board.columns,
        board: board,
@@ -156,10 +156,9 @@ defmodule RetrospectorWeb.BoardLive do
   end
 
   defp handle_joins(socket, joins) do
-    Enum.reduce(joins, socket, fn {_user, %{metas: [meta | _]}}, socket ->
+    Enum.reduce(joins, socket, fn {user, %{metas: [meta | _]}}, socket ->
       if socket.assigns.board != nil && meta.board_id == socket.assigns.board.id do
-        assign(socket, :board_users, [meta | socket.assigns.board_users])
-        |> assign(:connected_users, socket.assigns.connected_users+1)
+        assign(socket, :connected_users, Map.put(socket.assigns.connected_users, user, meta))
       else
         socket
       end
@@ -168,7 +167,7 @@ defmodule RetrospectorWeb.BoardLive do
 
   defp handle_leaves(socket, leaves) do
     Enum.reduce(leaves, socket, fn {user, _}, socket ->
-      assign(socket, :board_users, Map.delete(socket.assigns.board_users, user))
+      assign(socket, :connected_users, Map.delete(socket.assigns.connected_users, user))
     end)
   end
 end

@@ -14,7 +14,7 @@ defmodule RetrospectorWeb.Components.OnlineUsers do
     <div class="mt-2">
     <h2 class="text-s">Users online:
       <span class="text-s bg-amber-800 rounded px-2 py-1">
-        <%= Enum.count(@users) %>
+        <%= Enum.count(@current_user) %>
       </span>
     </h2>
     <div>
