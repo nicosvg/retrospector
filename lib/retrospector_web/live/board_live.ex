@@ -11,36 +11,32 @@ defmodule RetrospectorWeb.BoardLive do
 
   @impl true
   def mount(_params, session, socket) do
-    if connected?(socket), do: Retro.subscribe()
     board = Retro.get_board!(session["board_id"])
     changeset = Retro.change_card(%Card{}, %{board_id: board.id})
-
-    if connected?(socket), do: PubSub.subscribe(Retrospector.PubSub, "reveal:" <> board.id)
-    if connected?(socket), do: PubSub.subscribe(Retrospector.PubSub, "start:" <> board.id)
-
-    reveal_in_seconds = get_reveal(board.reveal_date)
-
-    if reveal_in_seconds > 0 do
-      Process.send_after(self(), :update_timer, 0)
-    end
-
-    # Generate random name for users to test display, this is currently not used
-    # Later, users may be able to enter their name
-    name = for _ <- 1..5, into: "", do: <<Enum.random('abcdefghijklmnopqrstuvwxyz')>>
-    # Get user color
-    # current_users = Enum.count(Presence.list(@presence))
-    board_users = Retro.get_users(board.id)
-
-    user = %{
-      id: Ecto.UUID.generate(),
-      name: name,
-      color: Colors.getColorForIndex(Enum.count(board_users)),
-      board_id: board.id
-    }
-
-    session = Map.put(session, "current_user", user)
+      board_users = Retro.get_users(board.id)
 
     if connected?(socket) do
+      Retro.subscribe()
+      PubSub.subscribe(Retrospector.PubSub, "reveal:" <> board.id)
+      PubSub.subscribe(Retrospector.PubSub, "start:" <> board.id)
+
+      IO.inspect(board_users, label: "board users")
+
+      # Generate random name for users to test display, this is currently not used
+      # Later, users may be able to enter their name
+      name = for _ <- 1..5, into: "", do: <<Enum.random('abcdefghijklmnopqrstuvwxyz')>>
+
+      user = %{
+        id: Ecto.UUID.generate(),
+        name: name,
+        color: Colors.getColorForIndex(Enum.count(board_users)),
+        board_id: board.id
+      }
+
+      Retro.create_user(user)
+
+      session = Map.put(session, "current_user", user)
+
       user = session["current_user"]
 
       {:ok, _} =
@@ -53,12 +49,13 @@ defmodule RetrospectorWeb.BoardLive do
         })
 
       PubSub.subscribe(Retrospector.PubSub, @presence)
-      Retro.create_user(user)
     end
 
-# TODO Save only connected users (presence) in assigns
-# Do not save color in database
-# Compute color from order in list of connected users, maybe sort by connection date?
+    reveal_in_seconds = get_reveal(board.reveal_date)
+
+    if reveal_in_seconds > 0 do
+      Process.send_after(self(), :update_timer, 0)
+    end
 
     {:ok,
      socket
@@ -66,7 +63,7 @@ defmodule RetrospectorWeb.BoardLive do
        changeset: changeset,
        current_user: session["current_user"],
        connected_users: %{},
-       board_users: [user | board_users],
+       board_users: [board_users],
        columns: board.columns,
        board: board,
        cards: Enum.flat_map(board.columns, fn c -> c.cards end),
@@ -84,6 +81,12 @@ defmodule RetrospectorWeb.BoardLive do
   @impl true
   def handle_info({:card_created, card}, socket) do
     {:noreply, update(socket, :cards, fn cards -> [card | cards] end)}
+  end
+
+  @impl true
+  def handle_info({:user_created, user}, socket) do
+    IO.inspect(user, label: "handle user created")
+    {:noreply, update(socket, :board_users, fn users -> [user | users] end)}
   end
 
   @impl true

@@ -213,6 +213,7 @@ defmodule Retrospector.Retro do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
+    |> broadcast(:user_created)
   end
 
   def subscribe do
